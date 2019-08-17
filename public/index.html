@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
+    <title>WE 🍌💗 PIXELS</title>
+</head>
+<body>
+    <h1>WE 💗 PIXELS and BANANAS 🍌</h1>
+    <h2>Latest Images</h2>
+    <div class="main">
+        <form>
+            <input v-model='title' type="text" name="title" placeholder="title" class="inputfile">
+            <input v-model='description' type="text" name="description" placeholder="description" class="inputfile">
+            <input v-model='username' type="text" name="username" placeholder="username" class="inputfile">
+            <input type="file" name="file" accept="image/*" @change='handleChange' class="inputfile">
+            <button @click.prevent.default='handleClick' class="inputfile">upload image</button>
+        </form>
+        <div class="picturesboard">
+            <div class="images" v-for="picture in pictures">
+                <a :href="'#' + picture.id" :id="picture.id">
+                <!-- <button @click='alertNotWorking'>DELETE PIC</button> -->
+                <img v-bind:src="picture.url" alt="image" id="show-modal" @click="showModal = true,id=picture.id">
+                </a>
+                <p><br />"{{picture.title}}" by {{picture.username}}</p>
+            </div>
+        </div>
+
+        <button @click.prevent.default='getMoreImages' class="showmore-button">SHOW MORE PICTURES</button>
+        <modal v-if="showModal" @close="showModal = false" :id='id'>
+        </modal>
+    </div>
+    <script type="text/x-template" id="modal-template">
+        <transition name="modal">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div class="modal-container">
+                        <div class="modal-footer">
+                            <slot name="footer">
+                                <h1>{{picture.title}} </h1>
+                                <img v-bind:src="picture.url" alt="image" class="modalimg">
+                                <p>{{picture.description}}</p>
+                                <p class="uploadedby">Uploaded by {{picture.username}}</p>
+                                <button class="modal-default-button" @click="$emit('close')">
+                                    CLOSE
+                                </button>
+                                <div class="comments-container">
+                                    <h2>Add a Comment!</h2>
+                                    <input v-model = 'comment' type="text" name="comment" placeholder="comment" class="inputfile">
+                                    <input v-model = 'username' type="text" name="username" placeholder="username" class="inputfile">
+                                    <button @click='newComment' class="inputfile">submit</button>
+                                </div>
+                                <div class="comments" v-for="comment in comments">
+                                    <h4>
+                                        "{{comment.comment}}"
+                                        said {{comment.username}}
+                                        {{comment.created_at}}
+                                    </h4>
+                                </div>
+                            </slot>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </script>
+    <script src="/js/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/newcomponent.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
